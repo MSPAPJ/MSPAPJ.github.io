@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>dubbo-demo3：带springboot、zookeeper的示例 | MSPAPJ</title><meta name="keywords" content="dubbo-demo"><meta name="author" content="MSPAPJ"><meta name="copyright" content="MSPAPJ"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="说明本项目需要启动 zookeeper 作为注册中心，因此，需要安装和启动 zookeeper。 技术栈包括 springboot + dubbo + zookeeper，采用注册中心连接方式分为2部分，1服务提供者dubbo-demo3-provider，2服务调用者dubbo-demo3-consumer 分为2部分    模块 说明    dubbo-demo3-provider 服务提供方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dubbo-demo3：带springboot、zookeeper的示例">
+<meta property="og:url" content="http://example.com/2022/09/23/dubbo-3/index.html">
+<meta property="og:site_name" content="MSPAPJ">
+<meta property="og:description" content="说明本项目需要启动 zookeeper 作为注册中心，因此，需要安装和启动 zookeeper。 技术栈包括 springboot + dubbo + zookeeper，采用注册中心连接方式分为2部分，1服务提供者dubbo-demo3-provider，2服务调用者dubbo-demo3-consumer 分为2部分    模块 说明    dubbo-demo3-provider 服务提供方">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg">
+<meta property="article:published_time" content="2022-09-23T03:17:01.147Z">
+<meta property="article:modified_time" content="2022-09-23T05:14:14.406Z">
+<meta property="article:author" content="MSPAPJ">
+<meta property="article:tag" content="dubbo-demo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/09/23/dubbo-3/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'dubbo-demo3：带springboot、zookeeper的示例',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-23 13:14:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="MSPAPJ" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 说说</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MSPAPJ</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw fa fa-comments-o"></i><span> 说说</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">dubbo-demo3：带springboot、zookeeper的示例</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-09-23T03:17:01.147Z" title="发表于 2022-09-23 11:17:01">2022-09-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-09-23T05:14:14.406Z" title="更新于 2022-09-23 13:14:14">2022-09-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/dubbo-%E5%85%A5%E9%97%A8/">dubbo-入门</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="dubbo-demo3：带springboot、zookeeper的示例"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本项目需要启动 zookeeper 作为注册中心，因此，需要安装和启动 zookeeper。</p>
+<p>技术栈包括 springboot + dubbo + zookeeper，采用注册中心连接方式<br>分为2部分，1服务提供者dubbo-demo3-provider，2服务调用者dubbo-demo3-consumer</p>
+<p>分为2部分</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dubbo-demo3-provider</td>
+<td>服务提供方的具体实现</td>
+</tr>
+<tr>
+<td>dubbo-demo3-consumer</td>
+<td>服务调用方</td>
+</tr>
+</tbody></table>
+<p>跟demo2的区别是引入了zookeeper的jar包和配置文件中dubbo路径不同，代码层面一致</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java11</span><br><span class="line">maven 3.8.4</span><br><span class="line">dubbo 3.0.5</span><br><span class="line">springboot 2.7.2</span><br></pre></td></tr></table></figure>
+
+<p>注意：高版本的dubbo会存在缓存文件加锁问题，默认生产者和消费者不能再一台机器</p>
+<h2 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h2><h3 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h3><p><a target="_blank" rel="noopener" href="http://archive.apache.org/dist/zookeeper/">下载地址</a> 下载<code>zookeeper</code>官方的bin 压缩包<strong>，</strong>解压就可以使用了，不需要安装。我下载的版本是 <strong>zookeeper 3.8.0</strong> 。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>安装完成后，需要配置一下<code>zoo.cfg</code>文件，该文件默认不存在，可以参考<code>conf/zoo_example.cfg</code>，复制这个文件改为为zoo.cfg，根据这个文件进行修改。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment">#服务端与客户端的session的会话时间 以ms为单位</span></span><br><span class="line">tickTime=2000</span><br><span class="line"><span class="comment">#快照保存目录(这个目录可以自行指定),windows下注意分隔符</span></span><br><span class="line">dataDir=F:/Program Files/apache-zookeeper-3.8.0/zk1</span><br><span class="line"><span class="comment">#客户端访问zk的端口</span></span><br><span class="line">clientPort=2181</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>j进入bin目录，在<code>Linux</code>下启动使用<code>zkServer.sh start</code>命令，而<code>windows</code>下使用<code>zkServer.cmd</code>命令</p>
+<p><strong>注意：zookeeper需要使用java，如果没有配置<code>JAVA_HOME</code>，需要先配置环境变量或者在zoo.cfg的开始部分配置临时变量。</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">set</span> JAVA_HOME=<span class="string">&quot;F:/Program Files/Java/jdk-11.0.12&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上是单机模式启动，可以设置多个机器做集群。</p>
+<h3 id="伪集群测试"><a href="#伪集群测试" class="headerlink" title="伪集群测试"></a>伪集群测试</h3><p>我们这里只是为了测试方便就不部署真正的集群了，部署个伪集群（同一台机器）方便测试</p>
+<p>创建3个配置文件，conf目录下分别创建zoo1.cfg，zoo2.cfg，zoo3.cfg 3个配置文件，里面对应的clientPort分别为2181、2182、2183</p>
+<p>然后创建3个数据文件zk1、zk2、zk3（F:&#x2F;Program Files&#x2F;apache-zookeeper-3.8.0目录下），dataDir里面与之对应。</p>
+<p>zk1、zk2、zk3中分别创建myid，里面的内容分别为1、2、3</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#session的会话时间 以ms为单位</span><br><span class="line">tickTime=2000</span><br><span class="line"></span><br><span class="line">#服务器启动以后，master和slave通讯的时间</span><br><span class="line">initLimit=10</span><br><span class="line"></span><br><span class="line">#master和slave之间的心跳检测时间，检测slave是否存活</span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line">#快照保存目录(这个目录可以自行指定),windows下注意分隔符</span><br><span class="line">dataDir=F:/Program Files/apache-zookeeper-3.8.0/zk1</span><br><span class="line"></span><br><span class="line">#客户端访问zk的端口</span><br><span class="line">clientPort=2181</span><br><span class="line"></span><br><span class="line">#zookeeper对应于前面在hosts里面配置的主机映射 2888是数据同步和消息传递端口，3888是选举端口</span><br><span class="line">server.1=zookeeper:2888:3888</span><br><span class="line"></span><br><span class="line">#zookeeper对应于前面在hosts里面配置的主机映射 2889是数据同步和消息传递端口，3889是选举端口 </span><br><span class="line">server.2=zookeeper:2889:3889</span><br><span class="line"></span><br><span class="line">#zookeeper对应于前面在hosts里面配置的主机映射 2890是数据同步和消息传递端口，3890是选举端口 </span><br><span class="line">server.3=zookeeper:2890:3890</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<p>linux下：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./zkServer.sh start /software/apache-zookeeper-3.8.0/conf/zoo1.cfg</span><br><span class="line">./zkServer.sh start /software/apache-zookeeper-3.8.0/conf/zoo2.cfg</span><br><span class="line">./zkServer.sh start /software/apache-zookeeper-3.8.0/conf/zoo3.cfg</span><br></pre></td></tr></table></figure>
+
+<p>windows下需要自己重新定义zkServer.cmd文件，复制原来的zkServer.cmd设置cfg路径，zkServer1.cmd为例</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">set</span> JAVA_HOME=<span class="string">&quot;F:/Program Files/Java/jdk-11.0.12&quot;</span></span><br><span class="line">……</span><br><span class="line"></span><br><span class="line">setlocal</span><br><span class="line">call <span class="string">&quot;%~dp0zkEnv.cmd&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> ZOOMAIN=org.apache.zookeeper.server.quorum.QuorumPeerMain</span><br><span class="line"><span class="built_in">set</span> ZOO_LOG_FILE=zookeeper-%USERNAME%-server-%COMPUTERNAME%.<span class="built_in">log</span></span><br><span class="line"><span class="built_in">set</span> ZOOCFG=%ZOOCFGDIR%\zoo1.cfg</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> on</span><br><span class="line">call %JAVA% <span class="string">&quot;-Dzookeeper.log.dir=%ZOO_LOG_DIR%&quot;</span> <span class="string">&quot;-Dzookeeper.log.file=%ZOO_LOG_FILE%&quot;</span> <span class="string">&quot;-XX:+HeapDumpOnOutOfMemoryError&quot;</span> <span class="string">&quot;-XX:OnOutOfMemoryError=cmd /c taskkill /pid %%%%p /t /f&quot;</span> -<span class="built_in">cp</span> <span class="string">&quot;%CLASSPATH%&quot;</span> %ZOOMAIN% <span class="string">&quot;%ZOOCFG%&quot;</span> %*</span><br><span class="line"></span><br><span class="line">endlocal</span><br></pre></td></tr></table></figure>
+
+<p>然后分别执行zkServer1.cmd、zkServer2.cmd、zkServer3.cmd</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>安装zookeeper报错Address unresolved: 10.19.32.30:3888，看配置最后是不是多了空格</p>
+<p>一般建议集群分布必须是奇数台，因为必须满足n&#x2F;2+1&#x3D;m,m必须大于部署zk机器数的一半(n&#x2F;2)可用才认为集群可用，而且奇数台更节省资源。</p>
+<h2 id="dubbo-admin"><a href="#dubbo-admin" class="headerlink" title="dubbo-admin"></a>dubbo-admin</h2><p>dubbo-admin为dubbo的监控管理软件</p>
+<h3 id="下载安装-1"><a href="#下载安装-1" class="headerlink" title="下载安装"></a>下载安装</h3><p>源码地址为<a target="_blank" rel="noopener" href="https://github.com/apache/dubbo-admin/tree/master%EF%BC%8Cmaster%E5%88%86%E6%94%AF%E5%B7%B2%E7%BB%8F%E6%98%AF%E5%89%8D%E5%90%8E%E5%8F%B0%E5%88%86%E7%A6%BB%E3%80%82">https://github.com/apache/dubbo-admin/tree/master，master分支已经是前后台分离。</a></p>
+<p>release下载地址 <a target="_blank" rel="noopener" href="https://github.com/apache/dubbo-admin/releases%EF%BC%8C%E6%88%91%E8%BF%99%E9%87%8C%E4%B8%8B%E8%BD%BD%E7%9A%84%E6%98%AF%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E7%9A%84%E5%8E%8B%E7%BC%A9%E5%8C%85[apache-dubbo-admin-0.4.0-bin-release.tar.gz](https://github.com/apache/dubbo-admin/releases/download/0.4.0/apache-dubbo-admin-0.4.0-bin-release.tar.gz)">https://github.com/apache/dubbo-admin/releases，我这里下载的是可执行文件的压缩包[apache-dubbo-admin-0.4.0-bin-release.tar.gz](https://github.com/apache/dubbo-admin/releases/download/0.4.0/apache-dubbo-admin-0.4.0-bin-release.tar.gz)</a></p>
+<ol>
+<li>需要使用java9以下，否则缺包</li>
+<li>安装目录中不能有空格</li>
+<li>默认8080端口可能被占用，建议修改为7001</li>
+</ol>
+<p>下载解压后修改端口为7001后，执行bin目录下的startup.cmd（windows）或startup.sh（linux），登录（密码在bin\config\application.properties中）后可以看到注册的服务，点击后面的“测试”按钮可以直接在线调试。</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/vg4ePA"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s1.ax1x.com/2022/08/25/vg4ePA.md.png" alt="vg4ePA.md.png"></a></p>
+<h3 id="master-0-2-0"><a href="#master-0-2-0" class="headerlink" title="master-0.2.0"></a>master-0.2.0</h3><p>如果不想使用前后端分离的版本，选用master-0.2.0分支。</p>
+<p>下载修改配置文件<code>src/main/resources/application.properties</code>打包执行或者直接在IDE中执行</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>查看信息时发现读取dubbo的版本有问题</p>
+<p>版本信息从哪里来呢？从provider的url中获取参数<code>release</code>（优先）、<code>dubbo</code>来判断provider的dubbo版本，</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">dubbo://192.168.1.211:20880/com.kevin.dubbodemo3.provider.service.ISayService?anyhost=true&amp;application=sayProvider&amp;background=false&amp;deprecated=false&amp;dubbo=2.0.2&amp;dynamic=true&amp;generic=false&amp;interface=com.kevin.dubbodemo3.provider.service.ISayService&amp;methods=sayHi&amp;owner=kevin&amp;pid=14948&amp;release=3.0.10&amp;revision=1.0.0&amp;service-name-mapping=true&amp;side=provider&amp;timeout=3000×tamp=1661245756674&amp;version=1.0.0</span><br></pre></td></tr></table></figure>
+
+<p>这里面有些历史原因，看dubbo 2.6.x的源码会发现，在2.6.3版本之前，url中dubbo参数代表的是dubbo的版本，而在2.6.3及以后的版本中，dubbo参数代表的是dubbo协议的版本。</p>
+<ul>
+<li><code>[2.5.3, 2.6.3)</code>版本中，dubbo版本与dubbo协议没有分开，都是用url上的dubbo参数，值是对应的版本号，取值范围是 <code>&gt;=2.0.0 &amp;&amp; &lt;=2.6.2</code></li>
+<li><code>[2.6.3, 2.7.0)</code>版本，无法从provider注册的url上看出dubbo版本，dubbo协议版本是从url的dubbo参数获取，固定为<code>2.0.2</code></li>
+<li><code>2.7.0</code>之后的版本，dubbo版本在provider的url release参数上，dubbo协议版本在dubbo参数上，目前还是2.0.2</li>
+</ul>
+<h2 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h2><p><a target="_blank" rel="noopener" href="https://imgse.com/i/vgA7aF"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s1.ax1x.com/2022/08/24/vgA7aF.png" alt="vgA7aF.png"></a></p>
+<p>父项目pom文件（部分）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- java版本，11 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">java.version</span>&gt;</span>11<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 3.0.5以上版本存在文件锁或者不能正常启动的问题，所以没有使用更高版本 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dubbo-starter.version</span>&gt;</span>3.0.5<span class="tag">&lt;/<span class="name">dubbo-starter.version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">zookeeper.version</span>&gt;</span>3.8.0<span class="tag">&lt;/<span class="name">zookeeper.version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">zkclient.version</span>&gt;</span>0.11<span class="tag">&lt;/<span class="name">zkclient.version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">curator.version</span>&gt;</span>5.3.0<span class="tag">&lt;/<span class="name">curator.version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dependencies</span>&gt;</span>		</span><br><span class="line">		<span class="comment">&lt;!-- lombok --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- apache 官方 3.0 starter依赖 --&gt;</span>	</span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.dubbo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;dubbo-starter.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.zookeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;zookeeper.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-log4j12<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- zookeeper客户端 只需引入此依赖curator-framework curator-recipes 都有 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.curator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>curator-x-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;curator.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">source</span>&gt;</span>$&#123;java.version&#125;<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">					<span class="tag">&lt;<span class="name">target</span>&gt;</span>$&#123;java.version&#125;<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--单元测试时引用src/main/resources下的资源文件 如果test下面有同类型的文件,则以test的为准--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">testResources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">testResource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.basedir&#125;/src/test/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">testResource</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">testResource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>$&#123;project.basedir&#125;/src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">testResource</span>&gt;</span></span><br><span class="line">    	<span class="tag">&lt;/<span class="name">testResources</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--服务提供者--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">module</span>&gt;</span>dubbo-demo3-provider<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--服务消费者--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>dubbo-demo3-consumer<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="dubbo-demo3-provider"><a href="#dubbo-demo3-provider" class="headerlink" title="dubbo-demo3-provider"></a>dubbo-demo3-provider</h3><h4 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="C:\Users\LD_001\AppData\Roaming\Typora\typora-user-images\image-20220824153013860.png" alt="image-20220824153013860"></p>
+<h4 id="引入jar包"><a href="#引入jar包" class="headerlink" title="引入jar包"></a>引入jar包</h4><p>引入spring-boot-starter包</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>依赖中加入了 <strong>spring-boot-start</strong> ，这个项目不需要 web ，dubbo 与 web无关。</p>
+<h4 id="application-yml"><a href="#application-yml" class="headerlink" title="application.yml"></a>application.yml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">  <span class="comment">#application这个节点下配置的是服务名称之类的，必须配置，否则会报错，且必须唯一，也就是在注册中心这个名字得唯一</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">sayProvider</span></span><br><span class="line">    <span class="attr">owner:</span> <span class="string">kevin</span> </span><br><span class="line">  <span class="comment">#在这里统一定义服务版本</span></span><br><span class="line">  <span class="comment">#version: 1.0.0</span></span><br><span class="line">  <span class="comment">#这是配置 dubbo的注册中心地址</span></span><br><span class="line">  <span class="attr">registry:</span></span><br><span class="line">    <span class="attr">address:</span> <span class="string">zookeeper://127.0.0.1:2181</span></span><br><span class="line">  <span class="comment">#定义dubbo的协议及端口，注意对比demo2</span></span><br><span class="line">  <span class="comment">#protocol:</span></span><br><span class="line">    <span class="comment">#name: dubbo</span></span><br><span class="line">    <span class="comment">#port: 20880</span></span><br></pre></td></tr></table></figure>
+
+<p>dubbo.application : 主要是配置dubbo的服务名称，这个服务名称是注册到注册中心的名称。 </p>
+<p>dubbo.registry.address: 指向的是 zookeeper ，就是在前文安装和启动的那个 zookeeper ，具体的ip和port 自行调整。</p>
+<h4 id="服务接口"><a href="#服务接口" class="headerlink" title="服务接口"></a>服务接口</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ISayService</span> &#123;</span><br><span class="line">    String <span class="title function_">sayHi</span><span class="params">(String uname)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="服务实现类"><a href="#服务实现类" class="headerlink" title="服务实现类"></a>服务实现类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基于注解方式实现的 dubbo 服务注册。@DubboService 注解是 dubbo 2.6.0 版本开始出现的，以前的版本就叫 @Service</span></span><br><span class="line"><span class="meta">@DubboService(version = &quot;1.0.0&quot;, timeout = 3000)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SayServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">ISayService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sayHi</span><span class="params">(String uname)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;zk hello , &quot;</span> + uname;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <strong>@DubboService</strong> 注解，这是暴露 dubbo 接口服务的。</p>
+<h4 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDubbo</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProviderAppMain</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ProviderAppMain.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用<code>@EnableDubbo</code>注解启用dubbo</p>
+<h3 id="dubbo-demo3-consumer"><a href="#dubbo-demo3-consumer" class="headerlink" title="dubbo-demo3-consumer"></a>dubbo-demo3-consumer</h3><h4 id="项目结构-1"><a href="#项目结构-1" class="headerlink" title="项目结构"></a>项目结构</h4><p><a target="_blank" rel="noopener" href="https://imgse.com/i/vgEgeK"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s1.ax1x.com/2022/08/24/vgEgeK.png" alt="vgEgeK.png"></a></p>
+<h4 id="引入jar包-1"><a href="#引入jar包-1" class="headerlink" title="引入jar包"></a>引入jar包</h4><p>引入springboot的web包</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="application-yml-1"><a href="#application-yml-1" class="headerlink" title="application.yml"></a>application.yml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8086</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">SayConsumer</span></span><br><span class="line">    <span class="attr">owner:</span> <span class="string">kevin</span></span><br><span class="line">  <span class="attr">registry:</span></span><br><span class="line">    <span class="attr">address:</span> <span class="string">zookeeper://127.0.0.1:2181</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="服务接口-1"><a href="#服务接口-1" class="headerlink" title="服务接口"></a>服务接口</h4><p>相同目录下放一个接口类，注意这个地方应该是引入一个公共jar包的，这里偷个懒。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.kevin.dubbodemo3.provider.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ISayService</span> &#123;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">sayHi</span><span class="params">(String uname)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，一定要跟服务提供的接口 <strong>同包名、同类名！！！</strong></p>
+<h4 id="controller类"><a href="#controller类" class="headerlink" title="controller类"></a>controller类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/say&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SayController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* @DubboReference 注解： 这个注解就是说，这里注入的是 dubbo 的服务接口。 </span></span><br><span class="line"><span class="comment">    url 指向的就是 点对点的服务提供者的 dubbo 地址，看这个地址，就能与 SayProvider项目的application.yml 中的配置对应上了。*/</span></span><br><span class="line">    <span class="meta">@DubboReference(version = &quot;1.0.0&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> ISayService sayService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(value = &quot;/hi&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">hi</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">res</span> <span class="operator">=</span> sayService.sayHi(<span class="string">&quot;兔先生!!!&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>@DubboReference</strong>引入服务</p>
+<h4 id="启动类-1"><a href="#启动类-1" class="headerlink" title="启动类"></a>启动类</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDubbo</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConsumerAppMain</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(ConsumerAppMain.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>@EnableDubbo</strong>注解启用dubbo</p>
+<h2 id="启动顺序"><a href="#启动顺序" class="headerlink" title="启动顺序"></a>启动顺序</h2><ol>
+<li>启动zookeeper</li>
+<li>启动dubbo-demo3-provider</li>
+<li>启动dubbo-demo3-consumer</li>
+</ol>
+<p>访问 <a target="_blank" rel="noopener" href="http://127.0.0.1:8086/say/hi">http://127.0.0.1:8086/say/hi</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">MSPAPJ</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/09/23/dubbo-3/">http://example.com/2022/09/23/dubbo-3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">MSPAPJ</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/dubbo-demo/">dubbo-demo</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/reward/wechat.jpg" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/reward/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/09/23/dubbo-4/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">dubbo-demo4：带springboot、zookeeper的日志链路追踪示例</div></div></a></div><div class="next-post pull-right"><a href="/2022/09/23/dubbo-2/"><img class="next-cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">dubbo-demo2：带springboot、不带zookeeper的示例</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/09/23/dubbo-1/" title="dubbo-demo1：不带springboot、zookeeper的示例"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/6.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-23</div><div class="title">dubbo-demo1：不带springboot、zookeeper的示例</div></div></a></div><div><a href="/2022/09/23/dubbo-2/" title="dubbo-demo2：带springboot、不带zookeeper的示例"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-23</div><div class="title">dubbo-demo2：带springboot、不带zookeeper的示例</div></div></a></div><div><a href="/2022/09/23/dubbo-4/" title="dubbo-demo4：带springboot、zookeeper的日志链路追踪示例"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-09-23</div><div class="title">dubbo-demo4：带springboot、zookeeper的日志链路追踪示例</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">MSPAPJ</div><div class="author-info__description">来日方长，何惧车遥马慢!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/MSPAPJ" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1394146196&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a><a class="social-icon" href="mailto:139414696@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">2.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#zookeeper"><span class="toc-number">3.</span> <span class="toc-text">zookeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.</span> <span class="toc-text">下载安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">3.3.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E9%9B%86%E7%BE%A4%E6%B5%8B%E8%AF%95"><span class="toc-number">3.4.</span> <span class="toc-text">伪集群测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.5.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo-admin"><span class="toc-number">4.</span> <span class="toc-text">dubbo-admin</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85-1"><span class="toc-number">4.1.</span> <span class="toc-text">下载安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#master-0-2-0"><span class="toc-number">4.2.</span> <span class="toc-text">master-0.2.0</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">4.2.1.</span> <span class="toc-text">问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA"><span class="toc-number">5.</span> <span class="toc-text">项目搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dubbo-demo3-provider"><span class="toc-number">5.1.</span> <span class="toc-text">dubbo-demo3-provider</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">5.1.1.</span> <span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E5%85%A5jar%E5%8C%85"><span class="toc-number">5.1.2.</span> <span class="toc-text">引入jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-yml"><span class="toc-number">5.1.3.</span> <span class="toc-text">application.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3"><span class="toc-number">5.1.4.</span> <span class="toc-text">服务接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="toc-number">5.1.5.</span> <span class="toc-text">服务实现类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB"><span class="toc-number">5.1.6.</span> <span class="toc-text">启动类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dubbo-demo3-consumer"><span class="toc-number">5.2.</span> <span class="toc-text">dubbo-demo3-consumer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84-1"><span class="toc-number">5.2.1.</span> <span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E5%85%A5jar%E5%8C%85-1"><span class="toc-number">5.2.2.</span> <span class="toc-text">引入jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-yml-1"><span class="toc-number">5.2.3.</span> <span class="toc-text">application.yml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3-1"><span class="toc-number">5.2.4.</span> <span class="toc-text">服务接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#controller%E7%B1%BB"><span class="toc-number">5.2.5.</span> <span class="toc-text">controller类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB-1"><span class="toc-number">5.2.6.</span> <span class="toc-text">启动类</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">启动顺序</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/09/23/dubbo-4/" title="dubbo-demo4：带springboot、zookeeper的日志链路追踪示例"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="dubbo-demo4：带springboot、zookeeper的日志链路追踪示例"/></a><div class="content"><a class="title" href="/2022/09/23/dubbo-4/" title="dubbo-demo4：带springboot、zookeeper的日志链路追踪示例">dubbo-demo4：带springboot、zookeeper的日志链路追踪示例</a><time datetime="2022-09-23T03:17:01.159Z" title="发表于 2022-09-23 11:17:01">2022-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/23/dubbo-3/" title="dubbo-demo3：带springboot、zookeeper的示例"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="dubbo-demo3：带springboot、zookeeper的示例"/></a><div class="content"><a class="title" href="/2022/09/23/dubbo-3/" title="dubbo-demo3：带springboot、zookeeper的示例">dubbo-demo3：带springboot、zookeeper的示例</a><time datetime="2022-09-23T03:17:01.147Z" title="发表于 2022-09-23 11:17:01">2022-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/23/dubbo-2/" title="dubbo-demo2：带springboot、不带zookeeper的示例"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="dubbo-demo2：带springboot、不带zookeeper的示例"/></a><div class="content"><a class="title" href="/2022/09/23/dubbo-2/" title="dubbo-demo2：带springboot、不带zookeeper的示例">dubbo-demo2：带springboot、不带zookeeper的示例</a><time datetime="2022-09-23T03:17:01.138Z" title="发表于 2022-09-23 11:17:01">2022-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/23/dubbo-1/" title="dubbo-demo1：不带springboot、zookeeper的示例"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="dubbo-demo1：不带springboot、zookeeper的示例"/></a><div class="content"><a class="title" href="/2022/09/23/dubbo-1/" title="dubbo-demo1：不带springboot、zookeeper的示例">dubbo-demo1：不带springboot、zookeeper的示例</a><time datetime="2022-09-23T03:17:01.129Z" title="发表于 2022-09-23 11:17:01">2022-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/09/19/mspa-two-blog/" title="侠客行 唐代 诗人 李白"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="侠客行 唐代 诗人 李白"/></a><div class="content"><a class="title" href="/2022/09/19/mspa-two-blog/" title="侠客行 唐代 诗人 李白">侠客行 唐代 诗人 李白</a><time datetime="2022-09-19T06:04:48.000Z" title="发表于 2022-09-19 14:04:48">2022-09-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/MSPAPJ/mspablog@master/img/1.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By MSPAPJ</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  var disqus_config = function () {
+    this.page.url = 'http://example.com/2022/09/23/dubbo-3/'
+    this.page.identifier = '/2022/09/23/dubbo-3/'
+    this.page.title = 'dubbo-demo3：带springboot、zookeeper的示例'
+  };
+
+  window.disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+
+  document.getElementById('darkmode').addEventListener('click', () => {
+    setTimeout(() => window.disqusReset(), 200)
+  })
+}
+
+if ('Valine' === 'Disqus' || !true) {
+  if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
